@@ -53,9 +53,9 @@
 # An invalid value will continue and use
 # x86_64_v3
 %if 0%{?rhel} >= 10
-%define _x86_64_lvl 3
+%define _x86_64_lvl 4
 %else
-%define _x86_64_lvl 2
+%define _x86_64_lvl 4
 %endif
 
 # Define variables for directory paths
