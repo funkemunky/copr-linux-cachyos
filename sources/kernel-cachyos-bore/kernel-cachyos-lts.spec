@@ -99,11 +99,15 @@ BuildRequires:  openssl
 BuildRequires:  openssl-devel
 BuildRequires:  perl-Carp
 BuildRequires:  perl-devel
+%if 0%{?suse_version}
+BuildRequires:  perl
+%else
 BuildRequires:  perl-generators
 BuildRequires:  perl-interpreter
+BuildRequires:  python-srpm-macros
+%endif
 BuildRequires:  python3-devel
 BuildRequires:  python3-pyyaml
-BuildRequires:  python-srpm-macros
 BuildRequires:  clang
 BuildRequires:  lld
 BuildRequires:  llvm
@@ -433,7 +437,11 @@ Provides:       installonlypkg(kernel)
 AutoReqProv:    no
 Requires(pre):  findutils
 Requires:       findutils
+%if 0%{?suse_version}
+Requires:       perl
+%else
 Requires:       perl-interpreter
+%endif
 Requires:       openssl-devel
 Requires:       elfutils-libelf-devel
 Requires:       bison
