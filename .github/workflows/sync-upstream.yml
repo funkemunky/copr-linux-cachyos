@@ -36,7 +36,11 @@ jobs:
           failed_branches=()
           for branch in master x86_64-v3; do
             echo "Syncing ${branch} from upstream/master"
-            git checkout "$branch" 2>/dev/null || git checkout --create "$branch"
+            if git show-ref --verify --quiet "refs/heads/${branch}"; then
+              git checkout "$branch"
+            else
+              git checkout -b "$branch"
+            fi
             git reset --hard upstream/master
             if ! git push origin "$branch" --force; then
               echo "::error::Failed to push ${branch}. Check token permissions and branch protection rules."
