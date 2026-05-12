@@ -1,0 +1,35 @@
+name: Sync upstream branches
+
+on:
+  schedule:
+    # 01:00 EST is 06:00 UTC.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync branches from upstream master
+        run: |
+          set -euo pipefail
+          git remote add upstream https://github.com/CachyOS/copr-linux-cachyos.git 2>/dev/null || true
+          git fetch upstream master
+
+          for branch in master x86_64-v3; do
+            git checkout -B "$branch" upstream/master
+            git push origin "$branch" --force
+          done
