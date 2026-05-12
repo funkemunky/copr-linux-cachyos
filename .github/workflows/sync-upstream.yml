@@ -33,11 +33,17 @@ jobs:
           fi
           git fetch upstream master
 
+          failed_branches=()
           for branch in master x86_64-v3; do
             echo "Syncing ${branch} from upstream/master"
             git checkout -B "$branch" upstream/master
             if ! git push origin "$branch" --force; then
               echo "::error::Failed to push ${branch}. Check token permissions and branch protection rules."
-              exit 1
+              failed_branches+=("$branch")
             fi
           done
+
+          if [ "${#failed_branches[@]}" -gt 0 ]; then
+            echo "::error::Sync failed for branch(es): ${failed_branches[*]}"
+            exit 1
+          fi
