@@ -2,7 +2,7 @@ name: Sync upstream branches
 
 on:
   schedule:
-    # 01:00 EST is 06:00 UTC.
+    # 01:00 EST (UTC-5, standard time) is 06:00 UTC.
     - cron: "0 6 * * *"
   workflow_dispatch:
 
