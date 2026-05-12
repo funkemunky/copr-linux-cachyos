@@ -2,7 +2,7 @@ name: Sync upstream branches
 
 on:
   schedule:
-    # 01:00 EST (UTC-5, standard time) is 06:00 UTC.
+    # This runs at 06:00 UTC, which is 01:00 EST (UTC-5) and 02:00 EDT (UTC-4).
     - cron: "0 6 * * *"
   workflow_dispatch:
 
@@ -36,7 +36,8 @@ jobs:
           failed_branches=()
           for branch in master x86_64-v3; do
             echo "Syncing ${branch} from upstream/master"
-            git checkout -B "$branch" upstream/master
+            git checkout "$branch" 2>/dev/null || git checkout --create "$branch"
+            git reset --hard upstream/master
             if ! git push origin "$branch" --force; then
               echo "::error::Failed to push ${branch}. Check token permissions and branch protection rules."
               failed_branches+=("$branch")
