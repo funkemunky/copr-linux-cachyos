@@ -89,7 +89,7 @@ Obsoletes:      kernel-cachyos-lts%{?_lto_args:-lto} <= 6.6.71-clts1.0%{?_lto_ar
 BuildRequires:  bc
 BuildRequires:  bison
 BuildRequires:  dwarves
-BuildRequires:  elfutils-devel
+BuildRequires: (elfutils-devel or libelf-devel)
 BuildRequires:  flex
 BuildRequires:  gcc
 BuildRequires:  gettext-devel
