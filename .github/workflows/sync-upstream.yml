@@ -26,10 +26,18 @@ jobs:
       - name: Sync branches from upstream master
         run: |
           set -euo pipefail
-          git remote add upstream https://github.com/CachyOS/copr-linux-cachyos.git 2>/dev/null || true
+          if git remote get-url upstream >/dev/null 2>&1; then
+            git remote set-url upstream https://github.com/CachyOS/copr-linux-cachyos.git
+          else
+            git remote add upstream https://github.com/CachyOS/copr-linux-cachyos.git
+          fi
           git fetch upstream master
 
           for branch in master x86_64-v3; do
+            echo "Syncing ${branch} from upstream/master"
             git checkout -B "$branch" upstream/master
-            git push origin "$branch" --force
+            if ! git push origin "$branch" --force; then
+              echo "::error::Failed to push ${branch}. Check token permissions and branch protection rules."
+              exit 1
+            fi
           done
