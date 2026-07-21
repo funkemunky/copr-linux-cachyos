@@ -72,7 +72,7 @@
 Name:           kernel-cachyos%{?_lto_args:-lto}
 Summary:        Linux BORE %{?_lto_args:+ LTO }Cachy Sauce Kernel by CachyOS with other patches and improvements.
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachyos1%{?_lto_args:.lto}%{?dist}
+Release:        cachyos1.hp8e60%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
@@ -131,15 +131,15 @@ Patch1:         %{_patch_src}/misc/dkms-clang.patch
 %endif
 
 %if ! %{_build_lto} && 0%{?rhel} == 9
-Patch2:         https://raw.githubusercontent.com/CachyOS/copr-linux-cachyos/refs/heads/master/sources/patches/kernel-el9-ar-thin.patch
+Patch2:         https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/kernel-el9-ar-thin.patch
 %endif
 
 %if %{_build_nv}
 Patch10:        %{_patch_src}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch
 %endif
 
-Patch9999: %{_patch_src}/0001-cs35l41-hp-omnibook-103c8e60.patch
-Patch10000: %{_patch_src}/0002-cs-amp-lib-prefer-cirrus-calibration-efi.patch
+Patch9999: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0001-cs35l41-hp-omnibook-103c8e60.patch
+Patch10000: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0002-cs-amp-lib-prefer-cirrus-calibration-efi.patch
 
 
 %description
