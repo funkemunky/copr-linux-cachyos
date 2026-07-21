@@ -1,0 +1,25 @@
+diff --git a/sound/soc/codecs/cs-amp-lib.c b/sound/soc/codecs/cs-amp-lib.c
+--- a/sound/soc/codecs/cs-amp-lib.c
++++ b/sound/soc/codecs/cs-amp-lib.c
+@@ -44,14 +44,14 @@ static const struct cs_amp_lib_cal_efivar {
+ 	efi_char16_t *name;
+ 	efi_guid_t *guid;
+ } cs_amp_lib_cal_efivars[] = {
+-	{
+-		.name = HP_CALIBRATION_EFI_NAME,
+-		.guid = &HP_CALIBRATION_EFI_GUID,
+-	},
+ 	{
+ 		.name = CIRRUS_LOGIC_CALIBRATION_EFI_NAME,
+ 		.guid = &CIRRUS_LOGIC_CALIBRATION_EFI_GUID,
+ 	},
++	{
++		.name = HP_CALIBRATION_EFI_NAME,
++		.guid = &HP_CALIBRATION_EFI_GUID,
++	},
+ };
+
+ #define CS_AMP_CAL_DEFAULT_EFI_ATTR			\
+-- 
+2.50.1
+

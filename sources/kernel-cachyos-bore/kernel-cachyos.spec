@@ -138,6 +138,10 @@ Patch2:         https://raw.githubusercontent.com/CachyOS/copr-linux-cachyos/ref
 Patch10:        %{_patch_src}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch
 %endif
 
+Patch9999: %{_patch_src}/0001-cs35l41-hp-omnibook-103c8e60.patch
+Patch10000: %{_patch_src}/0002-cs-amp-lib-prefer-cirrus-calibration-efi.patch
+
+
 %description
     The meta package for %{name}.
 
