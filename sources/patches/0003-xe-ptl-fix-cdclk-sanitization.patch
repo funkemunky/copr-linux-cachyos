@@ -1,28 +1,18 @@
-From: Ville Syrjälä
-Subject: [PATCH] drm/i915/cdclk: Avoid spurious cdclk sanitization on PTL+
-
-Apparently PTL+ no longer has the cd2x pipe select field in
-CDCLK_CTL. Take that into account during CDCLK sanitization.
-
-This currently triggers a spurious CDCLK sanitization during
-driver load on PTL+ which will causes a visible glitch on all
-active displays.
-
-Fixes: 3f9de66f8acb ("drm/i915/cdclk: Fix up CDCLK_FREQ_DECIMAL without a full PLL re-enable")
-
 diff --git a/drivers/gpu/drm/i915/display/intel_cdclk.c b/drivers/gpu/drm/i915/display/intel_cdclk.c
+index 7bc9b956554b..0438f5ac78c0 100644
 --- a/drivers/gpu/drm/i915/display/intel_cdclk.c
 +++ b/drivers/gpu/drm/i915/display/intel_cdclk.c
-@@ -2381,8 +2381,10 @@ static void bxt_sanitize_cdclk(struct intel_display *display)
+@@ -2366,8 +2366,10 @@ static void bxt_sanitize_cdclk(struct intel_display *display)
  	 * dividers both syncing to an active pipe, or asynchronously
  	 * (PIPE_NONE).
  	 */
--	cdctl &= ~bxt_cdclk_cd2x_pipe_mask(display);
+-	cdctl &= ~bxt_cdclk_cd2x_pipe(display, INVALID_PIPE);
 -	cdctl |= bxt_cdclk_cd2x_pipe(display, INVALID_PIPE);
 +	if (DISPLAY_VER(display) < 30) {
-+		cdctl &= ~bxt_cdclk_cd2x_pipe_mask(display);
++		cdctl &= ~bxt_cdclk_cd2x_pipe(display, INVALID_PIPE);
 +		cdctl |= bxt_cdclk_cd2x_pipe(display, INVALID_PIPE);
 +	}
-
+ 
  	if (cdctl != expected) {
  		if (DISPLAY_VER(display) < 20) {
+--
