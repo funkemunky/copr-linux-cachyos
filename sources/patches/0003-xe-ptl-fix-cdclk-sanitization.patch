@@ -15,5 +15,4 @@ index 7bc9b956554b..0438f5ac78c0 100644
  
  	if (cdctl != expected) {
  		if (DISPLAY_VER(display) < 20) {
-
 --
