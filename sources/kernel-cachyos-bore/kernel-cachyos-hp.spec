@@ -134,12 +134,13 @@ Patch1:         %{_patch_src}/misc/dkms-clang.patch
 Patch2:         https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/kernel-el9-ar-thin.patch
 %endif
 
+Patch3: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/kernel-7.2-i915-ptl-cdclk-sanitize.patch
+Patch4: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0001-cs35l41-hp-omnibook-103c8e60.patch
+Patch5: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0002-cs-amp-lib-prefer-cirrus-calibration-efi.patch
+
 %if %{_build_nv}
 Patch10:        %{_patch_src}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch
 %endif
-
-Patch9997: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0001-cs35l41-hp-omnibook-103c8e60.patch
-Patch9998: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0002-cs-amp-lib-prefer-cirrus-calibration-efi.patch
 
 %description
     The meta package for %{name}.
