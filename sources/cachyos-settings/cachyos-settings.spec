@@ -2,8 +2,8 @@
 %define debug_package %{nil}
 
 Name:           cachyos-settings
-Release:        1%{?dist}
-Version:        1.3.4
+Release:        2%{?dist}
+Version:        1.4.0
 Summary:        CachyOS-Settings ported to Fedora
 License:        GPL-3.0-or-later
 URL:            https://github.com/CachyOS/CachyOS-Settings
@@ -11,7 +11,9 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 Requires:       zram-generator
 Requires:       lua-luv
+%if 0%{?fedora}
 Requires:       systemd-resolved
+%endif
 Provides:       zram-generator-defaults
 Provides:       kerver
 Conflicts:      zram-generator-defaults

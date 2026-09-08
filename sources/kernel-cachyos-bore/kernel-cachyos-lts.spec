@@ -75,7 +75,7 @@
 Name:           kernel-cachyos-lts%{?_lto_args:-lto}
 Summary:        Linux BORE %{?_lto_args:+ LTO }Cachy Sauce Kernel by CachyOS with other patches and improvements.
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachylts1%{?_lto_args:.lto}%{?dist}
+Release:        cachylts3%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
@@ -360,7 +360,16 @@ Recommends:     linux-firmware
 
 %posttrans core
     rm -f %{_localstatedir}/lib/rpm-state/%{name}/installing_core_%{_kver}
-    if [ ! -e /run/ostree-booted ]; then
+    # For ostree image builds (and ostree-booted systems), /run/ostree-booted may
+    # be absent, but we still need to call kernel-install so that
+    # 05-rpmostree.install can invoke "rpm-ostree kernel-install add" and
+    # generate the initramfs. In non-ostree build containers, skip kernel-install
+    # to avoid grub2-probe/grub2-editenv errors (issue #96).
+    _ki_layout=$(grep -rs '^layout=' /etc/kernel/install.conf /etc/kernel/install.conf.d /usr/lib/kernel/install.conf /usr/lib/kernel/install.conf.d 2>/dev/null | tail -1 | cut -d= -f2)
+    if [ "$_ki_layout" = "ostree" ] || [ -d /run/systemd/system ]; then
+        # rpm-ostree 2026.1 runs dracut before depmod for third-party kernels,
+        # so ensure modules.dep exists before kernel-install invokes dracut.
+        depmod -a %{_kver}
         /bin/kernel-install add %{_kver} %{_kernel_dir}/vmlinuz || exit $?
         if [[ ! -e "/boot/symvers-%{_kver}.zst" ]]; then
             cp "%{_kernel_dir}/symvers.zst" "/boot/symvers-%{_kver}.zst"
