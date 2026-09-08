@@ -11,7 +11,7 @@
 
 # Linux Kernel Versions
 %define _basekver 7.2
-%define _stablekver 0
+%define _stablekver 3
 %define _rpmver %{version}-%{release}
 %define _kver %{_rpmver}.%{_arch}
 
@@ -69,19 +69,19 @@
 
 %define _module_args KERNEL_UNAME=%{_kver} IGNORE_PREEMPT_RT_PRESENCE=1 SYSSRC=%{_builddir}/linux-%{_tag} SYSOUT=%{_builddir}/linux-%{_tag}
 
-Name:           kernel-cachyos-hp%{?_lto_args:-lto}
+Name:           kernel-cachyos%{?_lto_args:-lto}
 Summary:        Linux BORE %{?_lto_args:+ LTO }Cachy Sauce Kernel by CachyOS with other patches and improvements.
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachyos2.hp8e60%{?_lto_args:.lto}%{?dist}
+Release:        cachyos1%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
 Requires:       kernel-core-uname-r = %{_kver}
 Requires:       kernel-modules-uname-r = %{_kver}
 Requires:       kernel-modules-core-uname-r = %{_kver}
-Provides:       kernel-cachyos-hp%{?_lto_args:-lto} > 6.12.9-cb1.0%{?_lto_args:.lto}%{?dist}
+Provides:       kernel-cachyos%{?_lto_args:-lto} > 6.12.9-cb1.0%{?_lto_args:.lto}%{?dist}
 Provides:       installonlypkg(kernel)
-Obsoletes:      kernel-cachyos-hp%{?_lto_args:-lto} <= 6.12.9-cb1.0.lto%{?_lto_args:.lto}%{?dist}
+Obsoletes:      kernel-cachyos%{?_lto_args:-lto} <= 6.12.9-cb1.0.lto%{?_lto_args:.lto}%{?dist}
 
 BuildRequires:  bc
 BuildRequires:  bison
@@ -361,7 +361,16 @@ Recommends:     linux-firmware
 
 %posttrans core
     rm -f %{_localstatedir}/lib/rpm-state/%{name}/installing_core_%{_kver}
-    if [ ! -e /run/ostree-booted ]; then
+    # For ostree image builds (and ostree-booted systems), /run/ostree-booted may
+    # be absent, but we still need to call kernel-install so that
+    # 05-rpmostree.install can invoke "rpm-ostree kernel-install add" and
+    # generate the initramfs. In non-ostree build containers, skip kernel-install
+    # to avoid grub2-probe/grub2-editenv errors (issue #96).
+    _ki_layout=$(grep -rs '^layout=' /etc/kernel/install.conf /etc/kernel/install.conf.d /usr/lib/kernel/install.conf /usr/lib/kernel/install.conf.d 2>/dev/null | tail -1 | cut -d= -f2)
+    if [ "$_ki_layout" = "ostree" ] || [ -d /run/systemd/system ]; then
+        # rpm-ostree 2026.1 runs dracut before depmod for third-party kernels,
+        # so ensure modules.dep exists before kernel-install invokes dracut.
+        depmod -a %{_kver}
         /bin/kernel-install add %{_kver} %{_kernel_dir}/vmlinuz || exit $?
         if [[ ! -e "/boot/symvers-%{_kver}.zst" ]]; then
             cp "%{_kernel_dir}/symvers.zst" "/boot/symvers-%{_kver}.zst"

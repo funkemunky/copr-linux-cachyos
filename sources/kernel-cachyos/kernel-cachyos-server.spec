@@ -52,7 +52,11 @@
 # Valid values are 1-4
 # An invalid value will continue and use
 # x86_64_v3
+%if 0%{?rhel} >= 10
+%define _x86_64_lvl 3
+%else
 %define _x86_64_lvl 2
+%endif
 
 # Define variables for directory paths
 # to be used during packaging
