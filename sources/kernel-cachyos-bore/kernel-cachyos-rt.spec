@@ -11,7 +11,7 @@
 
 # Linux Kernel Versions
 %define _basekver 7.2
-%define _stablekver 3
+%define _stablekver 5
 %define _rpmver %{version}-%{release}
 %define _kver %{_rpmver}.%{_arch}
 
@@ -71,7 +71,7 @@
 Name:           kernel-cachyos-rt%{?_lto_args:-lto}
 Summary:        Linux BORE %{?_lto_args:+ LTO }Cachy Sauce Kernel by CachyOS with other patches and improvements.
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachyrt2%{?_lto_args:.lto}%{?dist}
+Release:        cachyrt1%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
@@ -366,7 +366,7 @@ Recommends:     linux-firmware
     # generate the initramfs. In non-ostree build containers, skip kernel-install
     # to avoid grub2-probe/grub2-editenv errors (issue #96).
     _ki_layout=$(grep -rs '^layout=' /etc/kernel/install.conf /etc/kernel/install.conf.d /usr/lib/kernel/install.conf /usr/lib/kernel/install.conf.d 2>/dev/null | tail -1 | cut -d= -f2)
-    if [ "$_ki_layout" = "ostree" ] || [ -d /run/systemd/system ]; then
+    if [ "$_ki_layout" = "ostree" ] || [  then
         # rpm-ostree 2026.1 runs dracut before depmod for third-party kernels,
         # so ensure modules.dep exists before kernel-install invokes dracut.
         depmod -a %{_kver}
