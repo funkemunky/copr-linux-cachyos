@@ -1,0 +1,69 @@
+name: Build kernel-cachyos-bore
+
+on:
+  push:
+    paths:
+      - 'sources/kernel-cachyos-bore/*.spec'
+      - '.github/workflows/build-kernel-cachyos-bore.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:42
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          dnf -y update
+          dnf -y install \
+            rpm-build \
+            rpmdevtools \
+            rpm-sign \
+            spectool \
+            git \
+            tar \
+            gzip \
+            xz \
+            zstd \
+            patch
+
+      - name: Build source RPMs
+        run: |
+          set -euo pipefail
+          rpmdev-setuptree
+          mkdir -p "$GITHUB_WORKSPACE/artifacts"
+
+          cp "$GITHUB_WORKSPACE"/sources/kernel-cachyos-bore/*.spec "$HOME/rpmbuild/SPECS/"
+
+          for spec in "$HOME"/rpmbuild/SPECS/*.spec; do
+            spectool -g -R "$spec"
+            rpmbuild -bs "$spec" --define "_srcrpmdir $GITHUB_WORKSPACE/artifacts"
+          done
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-cachyos-bore-srpm
+          path: artifacts/*.src.rpm
+          if-no-files-found: error
+
+      - name: Generate release metadata
+        id: release
+        run: |
+          echo "tag=kernel-cachyos-bore-${GITHUB_SHA::7}-$(date -u +%Y%m%d%H%M%S)" >> "$GITHUB_OUTPUT"
+
+      - name: Create release with artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release.outputs.tag }}
+          name: kernel-cachyos-bore build ${{ steps.release.outputs.tag }}
+          generate_release_notes: true
+          files: artifacts/*.src.rpm
