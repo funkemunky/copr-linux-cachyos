@@ -133,7 +133,6 @@ Patch1:         %{_patch_src}/misc/dkms-clang.patch
 Patch2:         https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/kernel-el9-ar-thin.patch
 %endif
 
-Patch3: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0003-xe-ptl-fix-cdclk-sanitization.patch
 Patch4: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0001-cs35l41-hp-omnibook-103c8e60.patch
 Patch5: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0002-cs-amp-lib-prefer-cirrus-calibration-efi.patch
 
