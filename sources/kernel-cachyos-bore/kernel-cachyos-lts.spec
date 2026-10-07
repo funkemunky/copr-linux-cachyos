@@ -11,7 +11,7 @@
 
 # Linux Kernel Versions
 %define _basekver 6.18
-%define _stablekver 52
+%define _stablekver 55
 %define _rpmver %{version}-%{release}
 %define _kver %{_rpmver}.%{_arch}
 
@@ -75,7 +75,7 @@
 Name:           kernel-cachyos-lts%{?_lto_args:-lto}
 Summary:        Linux BORE %{?_lto_args:+ LTO }Cachy Sauce Kernel by CachyOS with other patches and improvements.
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachylts2%{?_lto_args:.lto}%{?dist}
+Release:        cachylts1%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
@@ -131,10 +131,6 @@ Source10:       https://github.com/NVIDIA/open-gpu-kernel-modules/archive/%{_nv_
 
 %if %{_build_lto}
 Patch1:         %{_patch_src}/misc/dkms-clang.patch
-%endif
-
-%if ! %{_build_lto} && 0%{?rhel} == 9
-Patch2:         https://raw.githubusercontent.com/CachyOS/copr-linux-cachyos/refs/heads/master/sources/patches/kernel-el9-ar-thin.patch
 %endif
 
 %if %{_build_nv}
