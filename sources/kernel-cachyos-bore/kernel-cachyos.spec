@@ -11,13 +11,13 @@
 
 # Linux Kernel Versions
 %define _basekver 7.2
-%define _stablekver 9
+%define _stablekver 8
 %define _rpmver %{version}-%{release}
 %define _kver %{_rpmver}.%{_arch}
 
 %define _tarkver %{version}
 
-%define _tag cachyos-%{_tarkver}-2
+%define _tag cachyos-%{_tarkver}-1
 
 # Build a minimal a kernel via modprobed.db
 # file to reduce build times
@@ -71,16 +71,16 @@
 Name:           kernel-cachyos%{?_lto_args:-lto}
 Summary:        Linux BORE %{?_lto_args:+ LTO }Cachy Sauce Kernel by CachyOS with other patches and improvements.
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachyos1%{?_lto_args:.lto}%{?dist}
+Release:        cachyos1.hp8e60%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
 Requires:       kernel-core-uname-r = %{_kver}
 Requires:       kernel-modules-uname-r = %{_kver}
 Requires:       kernel-modules-core-uname-r = %{_kver}
-Provides:       kernel-cachyos%{?_lto_args:-lto} > 6.12.9-cb1.0%{?_lto_args:.lto}%{?dist}
+Provides:       kernel-cachyos-hp%{?_lto_args:-lto} > 6.12.9-cb1.0%{?_lto_args:.lto}%{?dist}
 Provides:       installonlypkg(kernel)
-Obsoletes:      kernel-cachyos%{?_lto_args:-lto} <= 6.12.9-cb1.0.lto%{?_lto_args:.lto}%{?dist}
+Obsoletes:      kernel-cachyos-hp%{?_lto_args:-lto} <= 6.12.9-cb1.0.lto%{?_lto_args:.lto}%{?dist}
 
 BuildRequires:  bc
 BuildRequires:  bison
@@ -128,6 +128,13 @@ Patch0:         %{_patch_src}/sched/0001-bore-cachy.patch
 %if %{_build_lto}
 Patch1:         %{_patch_src}/misc/dkms-clang.patch
 %endif
+
+%if ! %{_build_lto} && 0%{?rhel} == 9
+Patch2:         https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/kernel-el9-ar-thin.patch
+%endif
+
+Patch4: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0001-cs35l41-hp-omnibook-103c8e60.patch
+Patch5: https://raw.githubusercontent.com/funkemunky/copr-linux-cachyos/refs/heads/master/sources/patches/0002-cs-amp-lib-prefer-cirrus-calibration-efi.patch
 
 %if %{_build_nv}
 Patch10:        %{_patch_src}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch
