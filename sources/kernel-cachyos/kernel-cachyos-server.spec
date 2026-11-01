@@ -11,14 +11,14 @@
 
 # Linux Kernel Versions
 %define _basekver 7.3
-%define _stablekver 1
+%define _stablekver 0
 %define _rpmver %{version}-%{release}
 %define _kver %{_rpmver}.%{_arch}
 
 %define _tarkver %{version}
 
 # CachyOS Linux Kernel Release from https://github.com/CachyOS/linux/releases
-%define _cachyos_release 1
+%define _cachyos_release 4
 %define _tag cachyos-%{_tarkver}-%{_cachyos_release}
 
 # Build a minimal a kernel via modprobed.db
