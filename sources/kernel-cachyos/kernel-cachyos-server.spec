@@ -10,14 +10,16 @@
 %undefine _include_frame_pointers
 
 # Linux Kernel Versions
-%define _basekver 7.2
-%define _stablekver 9
+%define _basekver 7.3
+%define _stablekver 1
 %define _rpmver %{version}-%{release}
 %define _kver %{_rpmver}.%{_arch}
 
 %define _tarkver %{version}
 
-%define _tag cachyos-%{_tarkver}-2
+# CachyOS Linux Kernel Release from https://github.com/CachyOS/linux/releases
+%define _cachyos_release 1
+%define _tag cachyos-%{_tarkver}-%{_cachyos_release}
 
 # Build a minimal a kernel via modprobed.db
 # file to reduce build times
@@ -75,7 +77,7 @@
 Name:           kernel-cachyos-server%{?_lto_args:-lto}
 Summary:        Linux %{?_lto_args:+ LTO }EEVDF scheduler Kernel by CachyOS targeted for Servers workloads
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachyserver1%{?_lto_args:.lto}%{?dist}
+Release:        %{_cachyos_release}.cachyserver1%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
@@ -155,9 +157,6 @@ Patch10:        %{_patch_src}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-
 
     # Do not change the system's hostname
     scripts/config -u DEFAULT_HOSTNAME
-
-    # Disable PREEMP
-    scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -e PREEMPT_NONE
 
     case %{_hz_tick} in
         100|250|300|500|600|750|1000)

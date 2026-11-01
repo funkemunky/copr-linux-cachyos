@@ -10,14 +10,16 @@
 %undefine _include_frame_pointers
 
 # Linux Kernel Versions
-%define _basekver 7.2
-%define _stablekver 9
+%define _basekver 7.3
+%define _stablekver 1
 %define _rpmver %{version}-%{release}
 %define _kver %{_rpmver}.%{_arch}
 
 %define _tarkver %{version}
 
-%define _tag cachyos-%{_tarkver}-2
+# CachyOS Linux Kernel Release from https://github.com/CachyOS/linux/releases
+%define _cachyos_release 1
+%define _tag cachyos-%{_tarkver}-%{_cachyos_release}
 
 # Build a minimal a kernel via modprobed.db
 # file to reduce build times
@@ -71,7 +73,7 @@
 Name:           kernel-cachyos-rt%{?_lto_args:-lto}
 Summary:        Linux BORE %{?_lto_args:+ LTO }Cachy Sauce Kernel by CachyOS with other patches and improvements.
 Version:        %{_basekver}.%{_stablekver}
-Release:        cachyrt1%{?_lto_args:.lto}%{?dist}
+Release:        %{_cachyos_release}.cachyrt1%{?_lto_args:.lto}%{?dist}
 License:        GPL-2.0-only
 URL:            https://cachyos.org
 
